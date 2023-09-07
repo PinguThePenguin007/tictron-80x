@@ -6,13 +6,13 @@
 -- version: 0.1
 -- script:  lua
 
-package.path = "/home/pingu/tic80-folder/3d-renderer/?.lua"
+package.path = "/home/pingu/tic80-folder/tictron-80x/?.lua"
 
-require "project_files/meshes"
+require "demo cart/project_files/meshes"
 
 require "renderer"
 
-require "project_files/libraries"
+require "demo cart/project_files/libraries"
 
 Objects={
  --[[]]
