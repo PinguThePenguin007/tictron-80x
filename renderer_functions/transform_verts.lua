@@ -58,9 +58,9 @@ function Renderer.transformVerts(customscene,customcam, CountVerts)
 		local scalex,scaley,scalez
 		if type(object_scale)=="table" then
 		 scalex,scaley,scalez=
-		 object_scale.x or object_scale[1] or 0,
-		 object_scale.y or object_scale[2] or 0,
-		 object_scale.z or object_scale[3] or 0
+		 object_scale.x or object_scale[1] or 1,
+		 object_scale.y or object_scale[2] or 1,
+		 object_scale.z or object_scale[3] or 1
 		else scalex,scaley,scalez=object_scale,object_scale,object_scale end
 
 		local OBJoffsetx,OBJoffsety,OBJoffsetz

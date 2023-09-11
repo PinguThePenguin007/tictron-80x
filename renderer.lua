@@ -133,7 +133,7 @@ function Renderer.recalculateCPlanes(customcam)
 
 end
 
-require "add_objects_to_scene"
+require "add_object_to_scene"
 require "transform_verts"
 require "clip_objects"
 require "add_draw_elements"

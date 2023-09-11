@@ -125,7 +125,9 @@ Targets={
 },
 }
 
-Gun=true
+ObjectList={Objects,Bullets,Targets}
+
+Blaster=true
 
 function TIC()
 	T=(T and T+1) or 0
@@ -136,40 +138,42 @@ function TIC()
 	TotalTime=time()
 
 	Renderer.resetScene()
-	Gui_drawdump=Renderer.customScene()
+	Gui_Scene=Renderer.customScene()
 
-	Renderer.addObjectsToScene(Objects)
-	Renderer.addObjectsToScene(Bullets)
-	Renderer.addObjectsToScene(Targets)
-	--[[]]
-	Renderer.addObjectsToScene({{
+	for _,objects in pairs(Objects) do
+		Renderer.addObjectToScene(objects)
+	end
+	for _,objects in pairs(Bullets) do
+		Renderer.addObjectToScene(objects)
+	end
+	for _,objects in pairs(Targets) do
+		Renderer.addObjectToScene(objects)
+	end
+	Renderer.addObjectToScene({
 	 position={x=0,y=0,z=1},
 	 rotation=Camera.rotation,
 	 scale=.1,
 	 mesh=Meshes.axis,
 	 lock_to_camera=true,
 	 rev_rot_order=true,
-	 }},Gui_drawdump)
---]]
---[[]]
+	 },Gui_Scene)
+
 	Renderer.clipObjects()
 
 	Renderer.transformVerts()
-	Renderer.transformVerts(Gui_drawdump)
+	Renderer.transformVerts(Gui_Scene)
 
 
 	Mark("VertDumpTime")
 
 	Renderer.addDrawElements()
-	Renderer.addDrawElements(Gui_drawdump)
+	Renderer.addDrawElements(Gui_Scene)
 
 	Renderer.replaceLabels()
-	Renderer.replaceLabels(Gui_drawdump)
+	Renderer.replaceLabels(Gui_Scene)
 	Mark("TriDumpTime")
 
-
-
---[[]
+--[[
 		for _,origin in pairs(Renderer.data.objectorigins) do
 			Renderer.data.drawdump[#Renderer.data.drawdump+1]={
 			 origin[1]; nofverts=1,type="c",
@@ -178,33 +182,29 @@ function TIC()
 		end--]]
 
 	Renderer.clipScene()
-	Renderer.clipScene(Gui_drawdump)
+	Renderer.clipScene(Gui_Scene)
 	Mark("TriClipTime")
 
 
 
 	Renderer.sortScene()
-	Renderer.sortScene(Gui_drawdump)
+	Renderer.sortScene(Gui_Scene)
 	Mark("TriSortTime")
---]]
+
 
 	cls(11)
---[[]]
-	--Camera.FOV=60
-	--rect(60,136/4,120,68,11)
-	Renderer.projectVerts({vertexdump=Renderer.data.scene.objectorigins})
+
+	--Renderer.projectVerts({vertexdump=Renderer.data.scene.objectorigins})
 
 	Renderer.drawScene()
-	--rectb(60,136/4,120,68,0)
-	Camera.FOV=120
-	Renderer.drawScene(Gui_drawdump)
+	Renderer.drawScene(Gui_Scene)
 
 	Mark("TriDrawTime")
---]]
+
 --[[
 Renderer.fullDraw({})
 Renderer.fullDraw({},Gui_drawdump)
--- ]]
+--]]
 	TotalTime=time()-TotalTime
 
 
@@ -214,8 +214,7 @@ Renderer.fullDraw({},Gui_drawdump)
 
 	if Markstr==nil or T%30==1 then
 
-		Markstr="load:"..math.floor((
-		TotalTime/(1000/60) )*100).."%"
+		Markstr="load:"..math.floor((TotalTime/(1000/60) )*100).."%"
 		.."\n"..Markprint(function(name,value) return
 		name..": "..value*1000//1/1000 .."ms." end)
 		.."total: "..TotalTime*1000//1/1000 .."ms."
@@ -262,7 +261,7 @@ local Vx,Vz=0,0
 
 	Camera.rotation.x=math.min(90,math.max(-90,Camera.rotation.x))
 
-	if Gun and mlmb then
+	if Blaster and mlmb then
 	if not Fired then
 
 	local gx,gy,gz=Vector.rotate(1,-1.5,3,
@@ -300,7 +299,7 @@ local Vx,Vz=0,0
 	Objects[11].buttoncolor=1+ (T//10%2)
 
 	local obj=Objects[8]
-	if Gun then
+	if Blaster then
 		obj.position={x=1,y=-1.5,z=0}
 		obj.rotation={x=0,y=0,z=0}
 	else
@@ -308,7 +307,7 @@ local Vx,Vz=0,0
 		obj.rotation.x=-30
 		obj.rotation.y=obj.rotation.y+2
 	end
-		obj.lock_to_camera=Gun
+		obj.lock_to_camera=Blaster
 
 	for _,b in pairs(Bullets) do
 		local vx,vy,vz=Vector.rotate(0,0,1,
