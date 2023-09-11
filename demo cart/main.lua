@@ -103,7 +103,8 @@ Camera={position={x=0,y=3,z=-5},rotation={x=0,y=0,z=0},
 CPlane=Renderer.CuttingPlanes.NearOnly
 }
 
-Bullets={}
+Bullets={
+}
 Targets={
 {
  position={x=0,y=3,z=40},
@@ -140,16 +141,9 @@ function TIC()
 	Renderer.resetScene()
 	Gui_Scene=Renderer.customScene()
 
-	for _,objects in pairs(Objects) do
-		Renderer.addObjectToScene(objects)
-	end
-	for _,objects in pairs(Bullets) do
-		Renderer.addObjectToScene(objects)
-	end
-	for _,objects in pairs(Targets) do
-		Renderer.addObjectToScene(objects)
-	end
-	Renderer.addObjectToScene({
+	Renderer.addObjectsToScene(ObjectList)
+
+	Renderer.addSingleObject({
 	 position={x=0,y=0,z=1},
 	 rotation=Camera.rotation,
 	 scale=.1,

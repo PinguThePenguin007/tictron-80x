@@ -1,4 +1,4 @@
-function Renderer.addObjectToScene(object,customscene, AddOrigins)
+function Renderer.addSingleObject(object,customscene, AddOrigins)
 
 	local scene=customscene or Renderer.data.scene
 	local vertexdump=scene.vertexdump
