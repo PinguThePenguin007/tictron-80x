@@ -1,21 +1,23 @@
--- title:   Blender's .obj to lua 
+-- title:   Blender's .obj to lua
 -- author:  PinguThePenguin_007 (discord: @PinguThePenguin#8639)
 -- desc:    a program to port Blender's .objs to lua to use in your TIC-80 projects (or even something else)
 -- site:    website link
--- license: MIT License 
+-- license: MIT License
 -- version: 0.1
 -- script:  lua
 
 --[[
-IN BLENDER: 
+!!!!!OUTDATED!!!!!
+
+IN BLENDER:
  - specify the colors as materials
  - export your sprites from your cart,
  then import in Blender for UVs
  - keep the UVs in bounds!!
- - note that Blender always applies 
+ - note that Blender always applies
  the modifiers on export for some reason (or idk)
  - ALWAYS CHECK YOUR NORMALS BEFORE EXPORTING
- - triangulate your objects pls!!! 
+ - triangulate your objects pls!!!
 EXPORT:
  select your object
  in settings, tick these boxes:
@@ -23,29 +25,29 @@ EXPORT:
   Write Materials
  and if you need textures, tick this
   Include UVs
- export your object, and open it with 
+ export your object, and open it with
  a text editor
  you can delete the .mtl file
  copy everything from the fourth line
  THE DATA HAS TO LOOK LIKE THE EXAMPLE
  (the hyphenations and stuff)
- OTHERWISE IT WILL BREAK 
+ OTHERWISE IT WILL BREAK
 EDITING:
- the controls are kinda 
- self-explanatory, the only thing i 
- should note is that the color 16 or 
+ the controls are kinda
+ self-explanatory, the only thing i
+ should note is that the color 16 or
  more enables UVs
 EXPORTING (again):
- click the export button and look 
+ click the export button and look
  in the console :D
 EDITING THE WAY THE CART EXPORTS:
- FIND words if export then 
+ FIND words if export then
  v - verts
  t - tris
  i1-i3 are the vert ids
  n - normal (1 for default 0 for inverted 2 for both
- inc_UV - if true, include UVs 
- (set in the beginning by my .obj 
+ inc_UV - if true, include UVs
+ (set in the beginning by my .obj
  reader)
  the other things are self-explanatory
 ]]
@@ -54,7 +56,7 @@ Objfile=[[
 
 ]]
 
-package.path = "/home/pingu/tic80-folder/3d-renderer/?.lua"
+package.path = "/home/pingu/tic80-folder/tictron-80x/?.lua"
 
 require "renderer"
 
@@ -62,10 +64,7 @@ function Round(a)
  if a%1<.5 then return math.floor(a) else return math.ceil(a) end
 end
 
-Materials={--[[
-{name="v1colour_tex",clr=16},
-{name="v1_wingcolour_tex",clr=17},
---]]
+Materials={
 }
 
 
