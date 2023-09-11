@@ -260,7 +260,8 @@ function TIC()
 
 		Objects[1].lock_to_camera=true
 
-		Renderer.dumpObjectsTable(Objects,exportdump)
+		Renderer.addObjectsToScene(Objects,exportdump)
+		Renderer.transformVerts(exportdump)
 
 		Objects[1].lock_to_camera=false
 
@@ -377,11 +378,14 @@ function PureExport()
 
 	Objects[1].lock_to_camera=true
 
-	Renderer.dumpObjectsTable(Objects,exportdump)
+	Renderer.addObjectsToScene(Objects,exportdump)
+	Renderer.transformVerts(exportdump)
 
 	Objects[1].lock_to_camera=false
 
 	print(ExportString(exportdump))
+
+	exit()
 
 end
 
