@@ -1,9 +1,9 @@
-function Renderer.transformVerts(customscene,customcam, CountVerts)
+function Renderer.transformVerts(customscene, CountVerts)
 
 	local scene=customscene or Renderer.data.scene
 	local vertexdump=scene.vertexdump
 
-	local camera=customcam or Camera
+	local camera=scene.camera
 
 	local vertcount=Renderer.debug.vertexcount
 	if CountVerts==nil then CountVerts=Renderer.defaultSettings.CountVerts end

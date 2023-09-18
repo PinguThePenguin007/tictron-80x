@@ -6,7 +6,7 @@ function Renderer.clipObjects(customscene)
 
 	local NormalizeRaw,GetDotRaw=RendererLib.NormalizeRaw,RendererLib.GetDotRaw
 
-	Renderer.transformVerts({vertexdump=objectorigins},nil,false)
+	Renderer.transformVerts({vertexdump=objectorigins,camera=scene.camera},nil)
 
 	for _,cPlane in pairs(Renderer.CuttingPlanes.Full) do
 		local cPlanePOSx,cPlanePOSy,cPlanePOSz,cPlaneNORMx,cPlaneNORMy,cPlaneNORMz=

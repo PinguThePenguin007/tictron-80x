@@ -1,6 +1,6 @@
 -- Does everything required to draw a scene, while still having customizability.
 -- You still need to reset the scene yourself, though.
-function Renderer.fullDraw(objects,customscene,settings,customcam,centerx,centery)
+function Renderer.fullDraw(objects,customscene,settings,centerx,centery)
 
 	settings=settings or {}
 	if settings.ClipObjects==nil then settings.ClipObjects=Renderer.defaultSettings.ClipObjects end
@@ -13,17 +13,17 @@ function Renderer.fullDraw(objects,customscene,settings,customcam,centerx,center
 		Renderer.clipObjects(customscene)
 	end
 
-	Renderer.transformVerts(customscene,customcam, settings.CountVerts)
+	Renderer.transformVerts(customscene, settings.CountVerts)
 	Renderer.addDrawElements(customscene, settings.BackfaceCulling)
 	if settings.EnableLabels then
 		Renderer.replaceLabels(customscene)
 	end
 
-	Renderer.clipScene(customscene,customcam)
+	Renderer.clipScene(customscene)
 	if settings.Sort then
 		Renderer.sortScene(customscene, settings.SimpleSort)
 	end
 
-	Renderer.drawScene(customscene,true,centerx,centery,customcam, settings.UseTTriOnly, settings.Wireframe)
+	Renderer.drawScene(customscene,true,centerx,centery, settings.UseTTriOnly, settings.Wireframe)
 
 end

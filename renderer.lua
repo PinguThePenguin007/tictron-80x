@@ -88,8 +88,8 @@ function Renderer.resetScene(customcam)
 	local camera=customcam or Camera --camera data is used to recalculate CPlanes only
 
 	-- we clear our working tables and out vertex count
-	Renderer.data.scene={vertexdump={ clippedverts={} }, drawdump={}}
-
+	Renderer.data.scene.vertexdump={ clippedverts={} }
+	Renderer.data.scene.drawdump={}
 	Renderer.debug.vertexcount=0
 
 	-- we create our plane and map data if they were not created yet, so you have less work to do

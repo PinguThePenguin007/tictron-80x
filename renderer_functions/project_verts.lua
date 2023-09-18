@@ -1,9 +1,9 @@
-function Renderer.projectVerts(customscene,customcam,CenterX,CenterY)
+function Renderer.projectVerts(customscene,CenterX,CenterY)
 
 	local scene=customscene or Renderer.data.scene
 	local vertexdump=scene.vertexdump
 
-	local camera=customcam or Camera
+	local camera=scene.camera
 	local CAMFOV=camera.FOV or 120
 	local centerx,centery=CenterX or 120,CenterY or 68
 

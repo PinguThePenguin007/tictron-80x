@@ -244,7 +244,7 @@ function TIC()
 	cls()
 
 	Renderer.resetScene()
-	Renderer.fullDraw({GridObject})
+	Renderer.fullDraw(GridObject)
 
 	Timemark=time()
 

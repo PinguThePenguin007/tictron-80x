@@ -1,4 +1,4 @@
-function Renderer.drawScene(customscene,project,customcam,CenterX,CenterY, UseTTriOnly,Wireframe)
+function Renderer.drawScene(customscene,project,CenterX,CenterY, UseTTriOnly,Wireframe)
 
 	local scene=customscene or Renderer.data.scene
 	local drawdump=scene.drawdump
@@ -7,9 +7,9 @@ function Renderer.drawScene(customscene,project,customcam,CenterX,CenterY, UseTT
 	if UseTTriOnly==nil then UseTTriOnly=Renderer.defaultSettings.UseTTriOnly end
 	if Wireframe==nil then Wireframe=Renderer.defaultSettings.Wireframe end
 
-	if project or project==nil then Renderer.projectVerts(scene,CenterX,CenterY,customcam) end
+	if project or project==nil then Renderer.projectVerts(scene,CenterX,CenterY) end
 
-	local CAMFOV=Camera.FOV or 120
+	local CAMFOV=scene.camera.FOV or 120
 
 	local tri,ttri,trib,line,circ,circb,print=tri,ttri,trib,line,circ,circb,print
 

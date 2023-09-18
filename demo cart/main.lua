@@ -140,6 +140,7 @@ function TIC()
 
 	Renderer.resetScene()
 	Gui_Scene=Renderer.customScene()
+	Gui_Scene.camera=Rscene.camera
 
 	Renderer.addObjectsToScene(ObjectList)
 
@@ -234,7 +235,7 @@ local Vx,Vz=0,0
 	if	key(48)	and camera.position.y<=floor then	Vy=0.5	end
 
 	Vx,_,Vz=Vector.rotate(Vx,0,Vz,
-		0,-math.rad(Camera.rotation.y),0)
+		0,-math.rad(camera.rotation.y),0)
 
 	camera.position.x,camera.position.y,camera.position.z=
 	camera.position.x+Vx,

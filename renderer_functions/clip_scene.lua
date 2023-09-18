@@ -4,8 +4,7 @@ function Renderer.clipScene(customscene, customcam, customplanes)
 	local vertexdump=scene.vertexdump
 	local drawdump=scene.drawdump
 
-	local camera=customcam or Camera
-	local cplanes=customplanes or camera.CPlane
+	local cplanes=customplanes or scene.camera.CPlane
 
 	local clippedverts=vertexdump.clippedverts
 
