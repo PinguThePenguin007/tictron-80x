@@ -99,10 +99,6 @@ for _,mesh in pairs(Meshes) do; if mesh.size~=false then
 	mesh.size=size
 end; end
 
-Camera={position={x=0,y=3,z=-5},rotation={x=0,y=0,z=0},
-CPlane=Renderer.CuttingPlanes.NearOnly
-}
-
 Bullets={
 }
 Targets={
@@ -128,6 +124,10 @@ Targets={
 
 ObjectList={Objects,Bullets,Targets}
 
+Rscene.camera={position={x=0,y=3,z=-5},rotation={x=0,y=0,z=0},
+CPlane=Renderer.CuttingPlanes.NearOnly
+}
+
 Blaster=true
 
 function TIC()
@@ -145,7 +145,7 @@ function TIC()
 
 	Renderer.addSingleObject({
 	 position={x=0,y=0,z=1},
-	 rotation=Camera.rotation,
+	 rotation=Rscene.camera.rotation,
 	 scale=.1,
 	 mesh=Meshes.axis,
 	 lock_to_camera=true,
@@ -218,7 +218,7 @@ Renderer.fullDraw({},Gui_drawdump)
 
 	Markclear()
 
-
+local camera=Rscene.camera
 
 local Vx,Vz=0,0
 
@@ -231,48 +231,48 @@ local Vx,Vz=0,0
 	if	key(4)	then	Vx= .2	end
 	if	key(1)	then	Vx=-.2	end
 
-	if	key(48)	and Camera.position.y<=floor then	Vy=0.5	end
+	if	key(48)	and camera.position.y<=floor then	Vy=0.5	end
 
 	Vx,_,Vz=Vector.rotate(Vx,0,Vz,
 		0,-math.rad(Camera.rotation.y),0)
 
-	Camera.position.x,Camera.position.y,Camera.position.z=
-	Camera.position.x+Vx,
-	Camera.position.y+Vy,
-	Camera.position.z+Vz
+	camera.position.x,camera.position.y,camera.position.z=
+	camera.position.x+Vx,
+	camera.position.y+Vy,
+	camera.position.z+Vz
 
 	local mx,my,mlmb,_,mrmb,_=mouse()
 	if mrmb then
-		Camera.rotation.y=Camera.rotation.y-((Oldmx or mx)-mx)
-		Camera.rotation.x=Camera.rotation.x-((Oldmy or my)-my)
+		camera.rotation.y=camera.rotation.y-((Oldmx or mx)-mx)
+		camera.rotation.x=camera.rotation.x-((Oldmy or my)-my)
 	end
 	Oldmx,Oldmy=mx,my
 
-	Camera.position.x,Camera.position.y,Camera.position.z=
-	math.max(-17,math.min(17,Camera.position.x)),
-	math.max(floor,math.min(17,Camera.position.y)),
-	math.max(-17,math.min(17,Camera.position.z))
+	camera.position.x,camera.position.y,camera.position.z=
+	math.max(-17,math.min(17,camera.position.x)),
+	math.max(floor,math.min(17,camera.position.y)),
+	math.max(-17,math.min(17,camera.position.z))
 
-	Camera.rotation.x=math.min(90,math.max(-90,Camera.rotation.x))
+	camera.rotation.x=math.min(90,math.max(-90,camera.rotation.x))
 
 	if Blaster and mlmb then
 	if not Fired then
 
 	local gx,gy,gz=Vector.rotate(1,-1.5,3,
-		-math.rad(Camera.rotation.x),
-		-math.rad(Camera.rotation.y),
+		-math.rad(camera.rotation.x),
+		-math.rad(camera.rotation.y),
 		0)
 
 		table.insert(Bullets,{
  position={
- x=Camera.position.x+gx,
- y=Camera.position.y+gy,
- z=Camera.position.z+gz},
+ x=camera.position.x+gx,
+ y=camera.position.y+gy,
+ z=camera.position.z+gz},
 
  rotation={
- x=-Camera.rotation.x,
- y=-Camera.rotation.y,
- z=-Camera.rotation.z},
+ x=-camera.rotation.x,
+ y=-camera.rotation.y,
+ z=-camera.rotation.z},
  scale={x=1,y=1,z=1},
  mesh=Meshes.sprite,
  size=false,

@@ -42,7 +42,18 @@ clippedverts={}, --contains vertices resulted from clipping the scene
 -- contains draw elements (triangles, lines, etc.) for drawing, sorting, etc.
 drawdump={},
 
+camera={
+
+position=    {x=0,y=0,z=0},
+rotation=    {x=0,y=0,z=0},
+originoffset={x=0,y=0,z=0},
+FOV=120,
+CPlane=nil
+
 },
+
+},
+
 
 -- if the UseTTriOnly setting is enabled, this map is used for proper coloring
 colorToUVMap={},
@@ -66,6 +77,10 @@ Full={} --for full clipping, both near, far, and at all the sides (usually the s
 },
 
 }
+
+Renderer.data.scene.camera.CPlane=Renderer.CuttingPlanes.NearFar
+
+Rscene=Renderer.data.scene
 
 -- Resets the default scene and setups some other variables for the Renderer, if need be.
 -- Should be reset at least 1 time during program execution befofe doing anything else!
