@@ -1,16 +1,17 @@
-function Renderer.clipScene(customscene, customcam)
+function Renderer.clipScene(customscene, customcam, customplanes)
 
 	local scene=customscene or Renderer.data.scene
 	local vertexdump=scene.vertexdump
 	local drawdump=scene.drawdump
 
 	local camera=customcam or Camera
+	local cplanes=customplanes or camera.CPlane
 
 	local clippedverts=vertexdump.clippedverts
 
 	local GetDotRaw,lerp=RendererLib.GetDotRaw,RendererLib.Lerp
 
-	for _,cPlane in pairs(camera.CPlane) do
+	for _,cPlane in pairs(cplanes) do
 		local cPlanePOSx,cPlanePOSy,cPlanePOSz,cPlaneNORMx,cPlaneNORMy,cPlaneNORMz=
 		 cPlane.position.x,cPlane.position.y,cPlane.position.z,
 		 cPlane.normal.x,cPlane.normal.y,cPlane.normal.z
