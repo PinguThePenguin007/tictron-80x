@@ -91,7 +91,7 @@ Objects={
 
 }
 
-for _,mesh in pairs(Meshes) do; if mesh.size~=false then
+for _,mesh in pairs(Meshes) do; if mesh.size==nil then
 	local size=0
 	for _,vert in pairs(mesh.verts) do
 		size=math.max(size, Vector.GetLen(vert) )
@@ -124,7 +124,7 @@ Targets={
 
 ObjectList={Objects,Bullets,Targets}
 
-Rscene.camera={position={x=0,y=3,z=-5},rotation={x=0,y=0,z=0},
+Rscene.camera={position={x=0,y=3,z=-5},rotation={x=0,y=0,z=0},FOV=120,
 CPlane=Renderer.CuttingPlanes.NearOnly
 }
 
@@ -169,8 +169,8 @@ function TIC()
 	Mark("TriDumpTime")
 
 --[[
-		for _,origin in pairs(Renderer.data.objectorigins) do
-			Renderer.data.drawdump[#Renderer.data.drawdump+1]={
+		for _,origin in pairs(Rscene.objectorigins) do
+			Rscene.drawdump[#Rscene.drawdump+1]={
 			 origin[1]; nofverts=1,type="c",
 			 data={p=1,b=true,c=12,s=origin[1].radius},object=origin.object
 			}
@@ -189,7 +189,7 @@ function TIC()
 
 	cls(11)
 
-	--Renderer.projectVerts({vertexdump=Renderer.data.scene.objectorigins})
+	--Renderer.projectVerts({vertexdump=Rscene.objectorigins,camera=Rscene.camera})
 
 	Renderer.drawScene()
 	Renderer.drawScene(Gui_Scene)
@@ -276,7 +276,6 @@ local Vx,Vz=0,0
  z=-camera.rotation.z},
  scale={x=1,y=1,z=1},
  mesh=Meshes.sprite,
- size=false,
  })
 	Fired=true
 	end

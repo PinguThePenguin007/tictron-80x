@@ -84,12 +84,13 @@ Rscene=Renderer.data.scene
 
 -- Resets the default scene and setups some other variables for the Renderer, if need be.
 -- Should be reset at least 1 time during program execution befofe doing anything else!
-function Renderer.resetScene(customcam)
-	local camera=customcam or Camera --camera data is used to recalculate CPlanes only
+function Renderer.resetScene()
+	local camera=Rscene.camera --camera data is used to recalculate CPlanes only
 
 	-- we clear our working tables and out vertex count
 	Renderer.data.scene.vertexdump={ clippedverts={} }
 	Renderer.data.scene.drawdump={}
+	Renderer.data.scene.objectorigins=nil
 	Renderer.debug.vertexcount=0
 
 	-- we create our plane and map data if they were not created yet, so you have less work to do

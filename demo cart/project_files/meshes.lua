@@ -21,7 +21,7 @@ text={ size=false,
 verts={{x=0,y=0,z=0}},
 drawdata={txt={{p=1,s=.2,c="color",str="text",sf=true}}},
 },
-sprite={
+sprite={ size=false,
 verts={{x=0,y=0,z=0}},
 drawdata={s={{p=1,s=2,t=0,uv={31,2,36,7}} }},
 },
