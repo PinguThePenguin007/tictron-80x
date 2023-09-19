@@ -196,6 +196,10 @@ function TIC()
 
 	Mark("TriDrawTime")
 
+	local mem=collectgarbage("count")
+	collectgarbage("collect")
+	Mark("GarbCollect")
+
 --[[
 Renderer.fullDraw({})
 Renderer.fullDraw({},Gui_drawdump)
@@ -209,13 +213,17 @@ Renderer.fullDraw({},Gui_drawdump)
 
 	if Markstr==nil or T%30==1 then
 
-		Markstr="load:"..math.floor((TotalTime/(1000/60) )*100).."%"
-		.."\n"..Markprint(function(name,value) return
-		name..": "..value*1000//1/1000 .."ms." end)
+		Markstr=
+		  "memory: "..mem*1000//1/1000 .."K\n"
+		.."load:"..math.floor((TotalTime/(1000/60) )*100).."%\n"
 		.."total: "..TotalTime*1000//1/1000 .."ms."
+
+		Markstr2,M2Len=Markprint(function(name,value) return
+		name..": "..value*1000//1/1000 .."ms." end,true)
 
 	end
 	print(Markstr,1,13,15,false,1,true)
+	print(Markstr2,240-M2Len,1,15,false,1,true)
 
 	Markclear()
 

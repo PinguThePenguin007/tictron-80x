@@ -52,12 +52,13 @@ local starttime=0
 		Markinit()
 	end
 
-	function Markprint(printstyle)
-	local str=""
+	function Markprint(printstyle,smalltext)
+	local str,strlen="",0
 		for _,tbl  in pairs(marktable) do
 			str=str..printstyle(tbl.name,tbl.value).."\n"
+			strlen=math.max(strlen,print(printstyle(tbl.name,tbl.value),0,400,0,false,1,smalltext))
 		end
-		return str
+		return str,strlen
 	end
 
 	function Markclear()
