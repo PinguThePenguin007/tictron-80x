@@ -1,4 +1,4 @@
-function Renderer.clipScene(customscene, customcam, customplanes)
+function Renderer.clipScene(customscene, customplanes)
 
 	local scene=customscene or Renderer.data.scene
 	local vertexdump=scene.vertexdump
@@ -9,6 +9,8 @@ function Renderer.clipScene(customscene, customcam, customplanes)
 	local clippedverts=vertexdump.clippedverts
 
 	local GetDotRaw,lerp=RendererLib.GetDotRaw,RendererLib.Lerp
+
+	local d={true,true,true} --we can reuse a single table for multiple clipping operations
 
 	for _,cPlane in pairs(cplanes) do
 		local cPlanePOSx,cPlanePOSy,cPlanePOSz,cPlaneNORMx,cPlaneNORMy,cPlaneNORMz=
@@ -26,13 +28,13 @@ function Renderer.clipScene(customscene, customcam, customplanes)
 			 P1.x-cPlanePOSx,P2.x-cPlanePOSx,P3.x-cPlanePOSx,
 			 P1.y-cPlanePOSy,P2.y-cPlanePOSy,P3.y-cPlanePOSy,
 			 P1.z-cPlanePOSz,P2.z-cPlanePOSz,P3.z-cPlanePOSz
-			local DotP={
-			 GetDotRaw(SubP1x,SubP1y,SubP1z,cPlaneNORMx,cPlaneNORMy,cPlaneNORMz),
-			 GetDotRaw(SubP2x,SubP2y,SubP2z,cPlaneNORMx,cPlaneNORMy,cPlaneNORMz),
-			 GetDotRaw(SubP3x,SubP3y,SubP3z,cPlaneNORMx,cPlaneNORMy,cPlaneNORMz)
-			}
 
-			local d=DotP
+			d[1]=GetDotRaw(SubP1x,SubP1y,SubP1z,cPlaneNORMx,cPlaneNORMy,cPlaneNORMz)
+			d[2]=GetDotRaw(SubP2x,SubP2y,SubP2z,cPlaneNORMx,cPlaneNORMy,cPlaneNORMz)
+			d[3]=GetDotRaw(SubP3x,SubP3y,SubP3z,cPlaneNORMx,cPlaneNORMy,cPlaneNORMz)
+
+
+
 
 
 			if d[1]<0 and d[2]<0 and d[3]<0 then
@@ -112,12 +114,11 @@ function Renderer.clipScene(customscene, customcam, customplanes)
 			 P1.x-cPlanePOSx,P2.x-cPlanePOSx,
 			 P1.y-cPlanePOSy,P2.y-cPlanePOSy,
 			 P1.z-cPlanePOSz,P2.z-cPlanePOSz
-			local DotP={
-			 GetDotRaw(SubP1x,SubP1y,SubP1z,cPlaneNORMx,cPlaneNORMy,cPlaneNORMz),
-			 GetDotRaw(SubP2x,SubP2y,SubP2z,cPlaneNORMx,cPlaneNORMy,cPlaneNORMz),
-			}
 
-			local d=DotP
+			d[1]=GetDotRaw(SubP1x,SubP1y,SubP1z,cPlaneNORMx,cPlaneNORMy,cPlaneNORMz)
+			d[2]=GetDotRaw(SubP2x,SubP2y,SubP2z,cPlaneNORMx,cPlaneNORMy,cPlaneNORMz)
+
+
 
 			if d[1]<0 and d[2]<0 then
 				table.remove(drawdump,eid)
