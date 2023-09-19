@@ -8,7 +8,7 @@ function Renderer.clipScene(customscene, customplanes)
 
 	local clippedverts=vertexdump.clippedverts
 
-	local GetDotRaw,lerp=RendererLib.GetDotRaw,RendererLib.Lerp
+	local GetDotRaw,lerp,table_remove,table_insert=RendererLib.GetDotRaw,RendererLib.Lerp,table.remove,table.insert
 
 	local d={true,true,true} --we can reuse a single table for multiple clipping operations
 
@@ -17,9 +17,28 @@ function Renderer.clipScene(customscene, customplanes)
 		 cPlane.position.x,cPlane.position.y,cPlane.position.z,
 		 cPlane.normal.x,cPlane.normal.y,cPlane.normal.z
 
+		local plane_is_axis=(cPlanePOSx==cPlaneNORMx and cPlanePOSy==cPlaneNORMy) --if the plane is perpendicular to the Z axis
+		local direction=cPlaneNORMz<0
+
 		for eid=#drawdump,1,-1 do
 			local element=drawdump[eid]
 			local NofVerts=element.nofverts
+
+			if plane_is_axis then
+				local P1_GT_Plane,P2_GT_Plane,P3_GT_Plane=
+				               element[1].z>cPlanePOSz,
+				 NofVerts<2 or element[2].z>cPlanePOSz,
+				 NofVerts<3 or element[3].z>cPlanePOSz
+				if direction then P1_GT_Plane,P2_GT_Plane,P3_GT_Plane=not P1_GT_Plane,not P2_GT_Plane,not P3_GT_Plane end
+
+				if P1_GT_Plane and P2_GT_Plane and P3_GT_Plane
+				 then goto continue
+				elseif (not P1_GT_Plane) and (not P2_GT_Plane) and (not P3_GT_Plane)
+				 then table_remove(drawdump,eid); goto continue
+				end
+			end
+
+
 
 		if NofVerts==3 then
 
@@ -38,7 +57,7 @@ function Renderer.clipScene(customscene, customplanes)
 
 
 			if d[1]<0 and d[2]<0 and d[3]<0 then
-				table.remove(drawdump,eid)
+				table_remove(drawdump,eid)
 			elseif d[1]<0 or d[2]<0 or d[3]<0 then
 
 				local out={}
@@ -104,7 +123,7 @@ function Renderer.clipScene(customscene, customplanes)
 					 out[1].uv.x,out[1].uv.y,out[3].uv.x,
 					 out[3].uv.y,out[4].uv.x,out[4].uv.y}
 					end
-				 table.insert(drawdump,{out[1].p,out[3].p,out[4].p;  type="t",nofverts=3,data=element.data,uv=uvlist,object=element.object})
+				 table_insert(drawdump,{out[1].p,out[3].p,out[4].p;  type="t",nofverts=3,data=element.data,uv=uvlist,object=element.object})
 				end
 			end
 		elseif NofVerts==2 then
@@ -121,7 +140,7 @@ function Renderer.clipScene(customscene, customplanes)
 
 
 			if d[1]<0 and d[2]<0 then
-				table.remove(drawdump,eid)
+				table_remove(drawdump,eid)
 			elseif d[1]<0 or d[2]<0 then
 
 					if d[1]<0 then
@@ -144,9 +163,11 @@ function Renderer.clipScene(customscene, customplanes)
 			 GetDotRaw(SubPx,SubPy,SubPz,cPlaneNORMx,cPlaneNORMy,cPlaneNORMz)
 
 			if DotP<0 then
-				table.remove(drawdump,eid)
+				table_remove(drawdump,eid)
 			end
 		end
+
+		::continue::
 		end
 	end
 

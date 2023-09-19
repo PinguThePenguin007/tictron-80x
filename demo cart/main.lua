@@ -197,8 +197,6 @@ function TIC()
 	Mark("TriDrawTime")
 
 	local mem=collectgarbage("count")
-	collectgarbage("collect")
-	Mark("GarbCollect")
 
 --[[
 Renderer.fullDraw({})
