@@ -72,22 +72,22 @@ function Renderer.clipScene(customscene, customplanes)
 				if hasuv then uv=element.uv else uv={} end
 
 				for i=1,3 do
-					local nexti,uvindex= i%3+1, i*2
+					local nexti,i_uvindex= i%3+1, i*2
 					if d[i]>=0 and d[nexti]>=0 then
 
 						out[#out+1]={p=v[i],
-						 uv_U=hasuv and uv[uvindex-1],
-						 uv_V=hasuv and uv[uvindex]}
+						 uv_U=hasuv and uv[i_uvindex-1],
+						 uv_V=hasuv and uv[i_uvindex]}
 
 					end
 					if d[i]>=0 and d[nexti]<0 then
 
 						out[#out+1]={p=v[i],
-						 uv_U=hasuv and uv[uvindex-1],
-						 uv_V=hasuv and uv[uvindex]}
+						 uv_U=hasuv and uv[i_uvindex-1],
+						 uv_V=hasuv and uv[i_uvindex]}
 
 						local p,uv_u,uv_v=uv3dlerp(v[i],v[nexti],
-						 uv[uvindex-1],uv[uvindex],
+						 uv[i_uvindex-1],uv[i_uvindex],
 						 uv[nexti*2-1],uv[nexti*2],
 						d[i]/(d[i]-d[nexti]),hasuv,vert_POSz)
 						out[#out+1]={p=p,uv_U=uv_u,uv_V=uv_v}
@@ -98,7 +98,7 @@ function Renderer.clipScene(customscene, customplanes)
 					if d[i]<0 and d[nexti]>=0 then
 
 						local p,uv_u,uv_v=uv3dlerp(v[i],v[nexti],
-						 uv[uvindex-1],uv[uvindex],
+						 uv[i_uvindex-1],uv[i_uvindex],
 						 uv[nexti*2-1],uv[nexti*2],
 						d[i]/(d[i]-d[nexti]),hasuv,vert_POSz)
 
