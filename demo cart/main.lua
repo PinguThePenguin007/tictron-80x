@@ -158,7 +158,7 @@ function TIC()
 
 	Renderer.transformVerts()
 	Renderer.transformVerts(Gui_Scene)
-
+	Renderer.projectVerts()
 
 	Mark("VertDumpTime")
 

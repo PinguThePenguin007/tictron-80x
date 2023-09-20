@@ -7,7 +7,7 @@ function Renderer.drawScene(customscene,project,CenterX,CenterY, UseTTriOnly,Wir
 	if UseTTriOnly==nil then UseTTriOnly=Renderer.defaultSettings.UseTTriOnly end
 	if Wireframe==nil then Wireframe=Renderer.defaultSettings.Wireframe end
 
-	if project or project==nil then Renderer.projectVerts(scene,CenterX,CenterY) end
+	if project or project==nil then Renderer.projectVerts(scene,CenterX,CenterY,true) end
 
 	local CAMFOV=scene.camera.FOV or 120
 
