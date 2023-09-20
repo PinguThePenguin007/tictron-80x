@@ -20,7 +20,7 @@ function Renderer.clipScene(customscene, customplanes)
 		local plane_is_axis=(cPlanePOSx==cPlaneNORMx and cPlanePOSy==cPlaneNORMy) --check if the plane is perpendicular to the Z axis
 
 		local direction,vert_POSz
-		if plane_is_axis then --...the clipped vertex's Z coordinate will always be equal to the plane's Z position
+		if plane_is_axis then -- ...the clipped vertex's Z coordinate will always be equal to the plane's Z position
 		vert_POSz=cPlanePOSz --so, we don't need to calculate lerp of Z axis
 		direction=cPlaneNORMz<0; end
 
@@ -33,11 +33,10 @@ function Renderer.clipScene(customscene, customplanes)
 				               element[1].z>cPlanePOSz,
 				 NofVerts<2 or element[2].z>cPlanePOSz,
 				 NofVerts<3 or element[3].z>cPlanePOSz
-				if direction then P1_GT_Plane,P2_GT_Plane,P3_GT_Plane=not P1_GT_Plane,not P2_GT_Plane,not P3_GT_Plane end
 
-				if P1_GT_Plane and P2_GT_Plane and P3_GT_Plane
+				if (P1_GT_Plane and P2_GT_Plane and P3_GT_Plane) ~= direction
 				 then goto continue
-				elseif (not P1_GT_Plane) and (not P2_GT_Plane) and (not P3_GT_Plane)
+				elseif ((not P1_GT_Plane) and (not P2_GT_Plane) and (not P3_GT_Plane)) ~= direction
 				 then table_remove(drawdump,eid); goto continue
 				end
 			end
