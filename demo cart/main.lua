@@ -72,13 +72,6 @@ Objects={
  scale={x=1,y=2,z=1},
  mesh=Meshes.arena,
  },
- blaster={
- position={x=1,y=-1.5,z=0},
- rotation={x=0,y=0,z=0},
- scale=1,
- mesh=Meshes.blaster,
- lock_to_camera=true -- while in this mode, position and rotation defines the object's offset
- },
  circles={
  position={x=0,y=3,z=0},
  rotation={x=0,y=0,z=0},
@@ -118,26 +111,33 @@ Targets={
 {RenderObject=true, --affects addObjectsToScene(), addSingleObject() will still add an object with this value set to false
  position={x=0,y=3,z=40},
  rotation={x=0,y=-90,z=0},
- scale={x=2,y=2,z=2},
+ scale=2,
  mesh=Meshes.tic,
 },
 {RenderObject=nil, -- nil will have the same effect as true
  position={x=-10,y=3,z=40},
  rotation={x=0,y=-90,z=0},
- scale={x=2,y=2,z=2},
+ scale=2,
  mesh=Meshes.tic,
 },
 {RenderObject=true,
  position={x=10,y=3,z=40},
  rotation={x=0,y=-90,z=0},
- scale={x=2,y=2,z=2},
+ scale=2,
  mesh=Meshes.tic,
 },
 }
 
+Blaster={
+ position={x=1,y=-1.5,z=0},
+ rotation={x=0,y=0,z=0},
+ scale=1,
+ mesh=Meshes.blaster,
+ lock_to_camera=true -- while in this mode, position and rotation defines the object's offset
+}
 
 -- better keep objects in simple, shallow tables for faster access
-ObjectList={Objects,Bullets,Targets}
+ObjectList={Objects,Bullets,Targets,Blaster={RenderTable=nil, Blaster}}
 
 Rscene.camera={
 position={x=0,y=3,z=-5},
@@ -146,6 +146,7 @@ FOV=120,
 CPlane=Renderer.CuttingPlanes.NearOnly
 }
 
+GuiObjects={
 Gui_axis={
  position={x=0,y=0,z=1},
  rotation=Rscene.camera.rotation,
@@ -153,6 +154,8 @@ Gui_axis={
  mesh=Meshes.axis,
  lock_to_camera=true,
  rev_rot_order=true, -- the rotation order will be ZYX instead of XYZ
+},
+Blaster={RenderTable=nil, Blaster}
 }
 
 Blaster_active=true
@@ -161,7 +164,7 @@ NoClip=false
 function TIC()
 	T=(T and T+1) or 0
 
-
+Zoffset=0
 
 	Markinit()
 	TotalTime=time()
@@ -172,7 +175,7 @@ function TIC()
 
 	Renderer.addObjectsToScene(ObjectList)
 
-	Renderer.addSingleObject(Gui_axis,Gui_Scene)
+	Renderer.addObjectsToScene(GuiObjects,Gui_Scene)
 
 	Renderer.clipObjects()
 
@@ -265,7 +268,7 @@ Renderer.fullDraw({},Gui_Scene)
 	if (key(48) or btn(4)) and (NoClip or camera.position.y<=floor) then Vy=NoClip and speed or jumpspeed end
 	if key(64) and NoClip then Vy=-speed end
 
-	if btnp(5) then NoClip=not NoClip end
+	if btnp(5) then NoClip=not NoClip Blaster_active=not NoClip end
 
 
 	Vx,_,Vz=Vector.rotate(Vx,0,Vz,
@@ -336,14 +339,18 @@ Renderer.fullDraw({},Gui_Scene)
 	Objects.text.color=T/5
 	Objects.terminal.buttoncolor=1+ (T//10%2)
 
-	local obj=Objects.blaster
+	local obj=Blaster
 	if Blaster_active then
 		obj.position={x=1,y=-1.5,z=0}
 		obj.rotation={x=0,y=0,z=0}
+		ObjectList.Blaster.RenderTable=false
+		GuiObjects.Blaster.RenderTable=true
 	else
 		obj.position={x=0,y=3,z=0}
-		obj.rotation.x=-30
+		obj.rotation.x=30
 		obj.rotation.y=obj.rotation.y+2
+		ObjectList.Blaster.RenderTable=true
+		GuiObjects.Blaster.RenderTable=false
 	end
 		obj.lock_to_camera=Blaster_active
 
