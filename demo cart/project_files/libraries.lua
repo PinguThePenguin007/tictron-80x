@@ -26,3 +26,10 @@ end
 Vector.GetLen=function(v)
  return math.sqrt(v.x*v.x+v.y*v.y+v.z*v.z)
 end
+
+Vector.Lerp=function (a,b,n)
+	return {x=a.x+(b.x-a.x)*n,
+	        y=a.y+(b.y-a.y)*n,
+	        z=a.z+(b.z-a.z)*n}
+end
+
