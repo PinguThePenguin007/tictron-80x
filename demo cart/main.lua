@@ -12,86 +12,98 @@ require "demo cart/project_files/meshes"
 
 require "renderer"
 
+-- miscellanous libs
 require "demo cart/project_files/libraries"
+
+-- functions to help measure the time spent rendering
 require "demo cart/project_files/marklib"
 
+-- objects for rendering :D
 Objects={
- --[[]]
+
+ tics={
  {
  position={x=0,y=3,z=0},
  rotation={x=0,y=0,z=0},
- scale={x=2,y=2,z=2},
+ scale=2,--scale can be defined as a single number
  mesh=Meshes.tic,
- originoffset={x=-3,y=0,z=0},
+ originoffset={x=-3,y=0,z=0},--originoffset is helpful for changing the point of rotation of the object
  },
  {
  position={x=0,y=3,z=0},
  rotation={x=0,y=180,z=0},
- scale={x=2,y=2,z=2},
+ scale=2,
  mesh=Meshes.tic,
  originoffset={x=-3,y=0,z=0},
+ }
  },
- {
- position={x=0,y=10,z=0},
+
+ heart={
+ position={0,10,0}, --position and rotation can be defined as an array
  rotation={x=0,y=0,z=0},
- scale={x=1,y=1,z=1},
+ scale=1,
  mesh=Meshes.heart,
  },
+
+ cubes={
  {
  position={x=30,y=3,z=0},
  rotation={x=0,y=0,z=0},
- scale={x=2,y=2,z=2},
+ scale=2,
  mesh=Meshes.cube,
  },
  {
  position={x=-30,y=3,z=0},
  rotation={x=0,y=0,z=0},
- scale={x=2,y=2,z=2},
+ scale=2,
  mesh=Meshes.cube,
  },
  {
  position={x=0,y=3,z=-30},
  rotation={x=0,y=0,z=0},
- scale={x=2,y=2,z=2},
+ scale=2,
  mesh=Meshes.cube,
+ }
  },
- {
+
+ arena={
  position={x=0,y=0,z=0},
  rotation={x=0,y=0,z=0},
  scale={x=1,y=2,z=1},
  mesh=Meshes.arena,
  },
- {
+ blaster={
  position={x=1,y=-1.5,z=0},
  rotation={x=0,y=0,z=0},
- scale={x=1,y=1,z=1},
- mesh=Meshes.gun,
- lock_to_camera=true
+ scale=1,
+ mesh=Meshes.blaster,
+ lock_to_camera=true -- while in this mode, position and rotation defines the object's offset
  },
- {
+ circles={
  position={x=0,y=3,z=0},
  rotation={x=0,y=0,z=0},
- scale={x=7,y=7,z=7},
+ scale=7,
  mesh=Meshes.square,
  },
- {
+ text={
  position={x=0,y=7,z=0},
  rotation={x=0,y=0,z=0},
- scale={x=7,y=7,z=7},
+ scale=7,
  mesh=Meshes.text,
- text="hello world",
- color=0
+ color=0 --labels can be put right in the object's table
  },
- {
+ terminal={
  position={x=-17,y=0,z=17},
  rotation={x=0,y=0,z=0},
- scale={x=1,y=1,z=1},
+ scale=1,
  mesh=Meshes.terminal,
  buttoncolor=2,
- },--]]
+ },
 
 }
 
+-- TODO: make a function to manipulate meshes
+-- calculate the "sizes" of all the objects
 for _,mesh in pairs(Meshes) do; if mesh.size==nil then
 	local size=0
 	for _,vert in pairs(mesh.verts) do
@@ -100,22 +112,22 @@ for _,mesh in pairs(Meshes) do; if mesh.size==nil then
 	mesh.size=size
 end; end
 
-Bullets={
-}
+
+Bullets={}
 Targets={
-{
+{RenderObject=true, --affects addObjectsToScene(), addSingleObject() will still add an object with this value set to false
  position={x=0,y=3,z=40},
  rotation={x=0,y=-90,z=0},
  scale={x=2,y=2,z=2},
  mesh=Meshes.tic,
 },
-{
+{RenderObject=nil, -- nil will have the same effect as true
  position={x=-10,y=3,z=40},
  rotation={x=0,y=-90,z=0},
  scale={x=2,y=2,z=2},
  mesh=Meshes.tic,
 },
-{
+{RenderObject=true,
  position={x=10,y=3,z=40},
  rotation={x=0,y=-90,z=0},
  scale={x=2,y=2,z=2},
@@ -123,13 +135,28 @@ Targets={
 },
 }
 
+
+-- better keep objects in simple, shallow tables for faster access
 ObjectList={Objects,Bullets,Targets}
 
-Rscene.camera={position={x=0,y=3,z=-5},rotation={x=0,y=0,z=0},FOV=120,
+Rscene.camera={
+position={x=0,y=3,z=-5},
+rotation={x=0,y=0,z=0},
+FOV=120,
 CPlane=Renderer.CuttingPlanes.NearOnly
 }
 
-Blaster=true
+Gui_axis={
+ position={x=0,y=0,z=1},
+ rotation=Rscene.camera.rotation,
+ scale=.1,
+ mesh=Meshes.axis,
+ lock_to_camera=true,
+ rev_rot_order=true, -- the rotation order will be ZYX instead of XYZ
+}
+
+Blaster_active=true
+NoClip=false
 
 function TIC()
 	T=(T and T+1) or 0
@@ -145,20 +172,14 @@ function TIC()
 
 	Renderer.addObjectsToScene(ObjectList)
 
-	Renderer.addSingleObject({
-	 position={x=0,y=0,z=1},
-	 rotation=Rscene.camera.rotation,
-	 scale=.1,
-	 mesh=Meshes.axis,
-	 lock_to_camera=true,
-	 rev_rot_order=true,
-	 },Gui_Scene)
+	Renderer.addSingleObject(Gui_axis,Gui_Scene)
 
 	Renderer.clipObjects()
 
 	Renderer.transformVerts()
 	Renderer.transformVerts(Gui_Scene)
 	Renderer.projectVerts()
+	Renderer.projectVerts(Gui_Scene)
 
 	Mark("VertDumpTime")
 
@@ -169,28 +190,27 @@ function TIC()
 	Renderer.replaceLabels(Gui_Scene)
 	Mark("TriDumpTime")
 
+-- uncomment to enable display of object origins and their "sizes"
+-- TODO: make a function to add debug objects to a scene
 --[[
-		for _,origin in pairs(Rscene.objectorigins) do
-			Rscene.drawdump[#Rscene.drawdump+1]={
-			 origin[1]; nofverts=1,type="c",
-			 data={p=1,b=true,c=12,s=origin[1].radius},object=origin.object
-			}
-		end--]]
+	for _,origin in pairs(Rscene.objectorigins) do
+		Rscene.drawdump[#Rscene.drawdump+1]={
+		 origin[1]; nofverts=1,type="c",
+		 data={p=1,b=true,c=12,s=origin[1].radius},object=origin.object
+		}
+		end
+	Renderer.projectVerts({vertexdump=Rscene.objectorigins,camera=Rscene.camera})
+--]]
 
 	Renderer.clipScene()
 	Renderer.clipScene(Gui_Scene)
 	Mark("TriClipTime")
 
-
-
 	Renderer.sortScene()
 	Renderer.sortScene(Gui_Scene)
 	Mark("TriSortTime")
 
-
 	cls(11)
-
-	--Renderer.projectVerts({vertexdump=Rscene.objectorigins,camera=Rscene.camera})
 
 	Renderer.drawScene()
 	Renderer.drawScene(Gui_Scene)
@@ -201,7 +221,7 @@ function TIC()
 
 --[[
 Renderer.fullDraw({})
-Renderer.fullDraw({},Gui_drawdump)
+Renderer.fullDraw({},Gui_Scene)
 --]]
 	TotalTime=time()-TotalTime
 
@@ -226,20 +246,27 @@ Renderer.fullDraw({},Gui_drawdump)
 
 	Markclear()
 
-local camera=Rscene.camera
+	-- player controller
 
-local Vx,Vz=0,0
+	local camera=Rscene.camera
 
-	Vy=Vy and Vy-.015 or 0
+	local Vx,Vz=0,0
+	Vy=(not NoClip and Vy) and Vy-.02  or 0
 
 	local floor=3
 
-	if	key(19)	then	Vz=-.2	end
-	if	key(23)	then	Vz= .2	end
-	if	key(4)	then	Vx= .2	end
-	if	key(1)	then	Vx=-.2	end
+	local speed=.2
+	local jumpspeed=.6
+	if key(23) or btn(0) then Vz= speed end
+	if key(19) or btn(1) then Vz=-speed end
+	if key(1)  or btn(2) then Vx=-speed end
+	if key(4)  or btn(3) then Vx= speed end
 
-	if	key(48)	and camera.position.y<=floor then	Vy=0.5	end
+	if (key(48) or btn(4)) and (NoClip or camera.position.y<=floor) then Vy=NoClip and speed or jumpspeed end
+	if key(64) and NoClip then Vy=-speed end
+
+	if btnp(5) then NoClip=not NoClip end
+
 
 	Vx,_,Vz=Vector.rotate(Vx,0,Vz,
 		0,-math.rad(camera.rotation.y),0)
@@ -256,51 +283,61 @@ local Vx,Vz=0,0
 	end
 	Oldmx,Oldmy=mx,my
 
-	camera.position.x,camera.position.y,camera.position.z=
-	math.max(-17,math.min(17,camera.position.x)),
-	math.max(floor,math.min(17,camera.position.y)),
-	math.max(-17,math.min(17,camera.position.z))
+	--limit position (who even needs collision algorithms?)
+	if not NoClip then
+		camera.position.x,camera.position.y,camera.position.z=
+		math.max(  -17,math.min(17,camera.position.x)),
+		math.max(floor,math.min(17,camera.position.y)),
+		math.max(  -17,math.min(17,camera.position.z))
+	end
 
+	--limit camera rotation
 	camera.rotation.x=math.min(90,math.max(-90,camera.rotation.x))
 
-	if Blaster and mlmb then
+--blaster controller
+
+	if Blaster_active and mlmb then
 	if not Fired then
 
-	local gx,gy,gz=Vector.rotate(1,-1.5,3,
-		-math.rad(camera.rotation.x),
-		-math.rad(camera.rotation.y),
-		0)
+		local gx,gy,gz=Vector.rotate(1,-1.5,3,
+			-math.rad(camera.rotation.x),
+			-math.rad(camera.rotation.y),
+			0)
 
 		table.insert(Bullets,{
- position={
- x=camera.position.x+gx,
- y=camera.position.y+gy,
- z=camera.position.z+gz},
+		 position={
+		 x=camera.position.x+gx,
+		 y=camera.position.y+gy,
+		 z=camera.position.z+gz},
 
- rotation={
- x=-camera.rotation.x,
- y=-camera.rotation.y,
- z=-camera.rotation.z},
- scale={x=1,y=1,z=1},
- mesh=Meshes.sprite,
- })
-	Fired=true
+		 rotation={
+		 x=-camera.rotation.x,
+		 y=-camera.rotation.y,
+		 z=-camera.rotation.z},
+		 scale=1,
+		 mesh=Meshes.sprite,
+		})
+		Fired=true
 	end
 	else Fired=false end
 
-	Objects[1].rotation.y=Objects[1].rotation.y+1
-	Objects[2].rotation.y=Objects[2].rotation.y+1
-	Objects[3].rotation.y=Objects[3].rotation.y-1
-	for i=4,6 do
-		Objects[i].rotation.y=Objects[i].rotation.y+1
-	end
-	Objects[9].rotation.y=Objects[3].rotation.y-1
-	Objects[10].text=T//20%2==0 and "!hello world!" or "hello world"
-	Objects[10].color=T/5
-	Objects[11].buttoncolor=1+ (T//10%2)
+	--object animation
 
-	local obj=Objects[8]
-	if Blaster then
+	for _,tic in pairs(Objects.tics) do
+		tic.rotation.y=tic.rotation.y+1
+	end
+	for _,cube in pairs(Objects.cubes) do
+		cube.rotation.y=cube.rotation.y+1
+	end
+	Objects.heart.rotation.y=Objects.heart.rotation.y-1
+	Objects.circles.rotation.y=Objects.circles.rotation.y-1
+
+	Objects.text.text=T//20%2==0 and "!hello world!" or "hello world" --comment me
+	Objects.text.color=T/5
+	Objects.terminal.buttoncolor=1+ (T//10%2)
+
+	local obj=Objects.blaster
+	if Blaster_active then
 		obj.position={x=1,y=-1.5,z=0}
 		obj.rotation={x=0,y=0,z=0}
 	else
@@ -308,7 +345,9 @@ local Vx,Vz=0,0
 		obj.rotation.x=-30
 		obj.rotation.y=obj.rotation.y+2
 	end
-		obj.lock_to_camera=Blaster
+		obj.lock_to_camera=Blaster_active
+
+		-- bullet controller
 
 	for _,b in pairs(Bullets) do
 		local vx,vy,vz=Vector.rotate(0,0,1,

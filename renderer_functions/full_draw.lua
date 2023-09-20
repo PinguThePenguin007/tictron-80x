@@ -14,6 +14,7 @@ function Renderer.fullDraw(objects,customscene,settings,centerx,centery)
 	end
 
 	Renderer.transformVerts(customscene, settings.CountVerts)
+	Renderer.projectVerts(customscene,centerx,centery)
 	Renderer.addDrawElements(customscene, settings.BackfaceCulling)
 	if settings.EnableLabels then
 		Renderer.replaceLabels(customscene)

@@ -20,6 +20,7 @@ drawdata={c={{p=1,s=1,c=2}}},
 text={ size=false,
 verts={{x=0,y=0,z=0}},
 drawdata={txt={{p=1,s=.2,c="color",str="text",sf=true}}},
+labels={text="good day, orb"}
 },
 sprite={ size=false,
 verts={{x=0,y=0,z=0}},
@@ -323,7 +324,7 @@ drawdata={
  {p={2,12,10},c=2},
 }
 },
-gun={
+blaster={
 verts={
  {x=0.26,y=0.15,z=4.8},
  {x=-0.26,y=0.15,z=4.8},
