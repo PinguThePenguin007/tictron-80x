@@ -95,6 +95,11 @@ GetDotRaw=function (ax,ay,az,bx,by,bz)
 	return ax*bx+ay*by+az*bz
 end,
 
+NormalizeRaw=function(vx,vy,vz)
+	local lenV=math.sqrt(vx*vx+vy*vy+vz*vz)
+	return vx/lenV,vy/lenV,vz/lenV
+end,
+
 -- Linear interpolation of a 3D vector, modified to work specifically with ClipScene().
 UV3DLerp=function (a_vec,b_vec,a_uv_U,a_uv_V,b_uv_U,b_uv_V,n,hasuv,plane_POSz)
 	return

@@ -13,11 +13,6 @@ Vector.GetNormal=function(a,b,c)
 	 z=va_x*vb_y-va_y*vb_x}
 end
 
-Vector.NormalizeRaw=function(vx,vy,vz)
-	local lenV=math.sqrt(vx*vx+vy*vy+vz*vz)
-	return vx/lenV,vy/lenV,vz/lenV
-end
-
 Vector.Normalize=function(v)
 	local lenV=math.sqrt(v.x*v.x+v.y*v.y+v.z*v.z)
 	return {x=v.x/lenV,y=v.y/lenV,z=v.z/lenV}
