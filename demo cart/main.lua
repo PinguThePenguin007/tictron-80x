@@ -18,7 +18,7 @@ require "demo cart/project_files/libraries"
 -- functions to help measure the time spent rendering
 require "demo cart/project_files/marklib"
 
--- objects for rendering :D
+-- objects for rendering
 Objects={
 
  tics={
@@ -128,16 +128,16 @@ Targets={
 },
 }
 
+-- better keep objects in simple, shallow tables for faster access
+ObjectList={Objects,Bullets,Targets,
 Blaster={
- position={x=1,y=-1.5,z=0},
- rotation={x=0,y=0,z=0},
+ RenderObject=nil,
+ position={x=0,y=3,z=0},
+ rotation={x=30,y=0,z=0},
  scale=1,
  mesh=Meshes.blaster,
- lock_to_camera=true -- while in this mode, position and rotation defines the object's offset
 }
-
--- better keep objects in simple, shallow tables for faster access
-ObjectList={Objects,Bullets,Targets,Blaster={RenderTable=nil, Blaster}}
+}
 
 Rscene.camera={
 position={x=0,y=3,z=-5},
@@ -155,7 +155,14 @@ Gui_axis={
  lock_to_camera=true,
  rev_rot_order=true, -- the rotation order will be ZYX instead of XYZ
 },
-Blaster={RenderTable=nil, Blaster}
+GuiBlaster={
+ RenderObject=nil,
+ position={x=1,y=-1.5,z=0},
+ rotation={x=0,y=0,z=0},
+ scale=1,
+ mesh=Meshes.blaster,
+ lock_to_camera=true -- while in this mode, position and rotation defines the object's offset
+}
 }
 
 Blaster_active=true
@@ -268,7 +275,7 @@ Renderer.fullDraw({},Gui_Scene)
 	if (key(48) or btn(4)) and (NoClip or camera.position.y<=floor) then Vy=NoClip and speed or jumpspeed end
 	if key(64) and NoClip then Vy=-speed end
 
-	if btnp(5) then NoClip=not NoClip Blaster_active=not NoClip end
+
 
 
 	Vx,_,Vz=Vector.rotate(Vx,0,Vz,
@@ -293,6 +300,8 @@ Renderer.fullDraw({},Gui_Scene)
 		math.max(floor,math.min(17,camera.position.y)),
 		math.max(  -17,math.min(17,camera.position.z))
 	end
+
+	if btnp(5) then NoClip=not NoClip Blaster_active=not NoClip end
 
 	--limit camera rotation
 	camera.rotation.x=math.min(90,math.max(-90,camera.rotation.x))
@@ -339,20 +348,12 @@ Renderer.fullDraw({},Gui_Scene)
 	Objects.text.color=T/5
 	Objects.terminal.buttoncolor=1+ (T//10%2)
 
-	local obj=Blaster
-	if Blaster_active then
-		obj.position={x=1,y=-1.5,z=0}
-		obj.rotation={x=0,y=0,z=0}
-		ObjectList.Blaster.RenderTable=false
-		GuiObjects.Blaster.RenderTable=true
-	else
-		obj.position={x=0,y=3,z=0}
-		obj.rotation.x=30
-		obj.rotation.y=obj.rotation.y+2
-		ObjectList.Blaster.RenderTable=true
-		GuiObjects.Blaster.RenderTable=false
+	if not Blaster_active then
+		ObjectList.Blaster.rotation.y=ObjectList.Blaster.rotation.y+2
 	end
-		obj.lock_to_camera=Blaster_active
+	ObjectList.Blaster.RenderObject=not Blaster_active
+	GuiObjects.GuiBlaster.RenderObject= Blaster_active
+
 
 		-- bullet controller
 
@@ -390,20 +391,6 @@ end
 -- 096:eeeeee00eeeeee00eeddee00eeeeee00eeeeee00eeeeeee0e22e22e0eeeeeee0
 -- 255:001122330011223344556677445566778899aabb8899aabbccddeeffccddeeff
 -- </TILES>
-
--- <WAVES>
--- 000:00000000ffffffff00000000ffffffff
--- 001:0123456789abcdeffedcba9876543210
--- 002:0123456789abcdef0123456789abcdef
--- </WAVES>
-
--- <SFX>
--- 000:000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000304000000000
--- </SFX>
-
--- <TRACKS>
--- 000:100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
--- </TRACKS>
 
 -- <PALETTE>
 -- 000:1a1c2c5d275db13e53ef7d57ffcd75a7f07038b76425717929366f3b5dc941a6f673eff7f4f4f494b0c2566c86333c57
