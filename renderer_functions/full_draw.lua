@@ -8,7 +8,7 @@ function Renderer.fullDraw(objects,customscene,settings,centerx,centery)
 	if settings.EnableLabels==nil then settings.EnableLabels=Renderer.defaultSettings.EnableLabels end
 
 
-	Renderer.addObjectsToScene(objects,customscene, settings.clipObjects)
+	Renderer.addObjectsToScene(objects,customscene,nil,settings.clipObjects)
 	if settings.ClipObjects then
 		Renderer.clipObjects(customscene)
 	end
