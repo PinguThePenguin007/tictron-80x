@@ -63,7 +63,7 @@ function Renderer.clipScene(customscene, customplanes)
 				table_remove(drawdump,eid)
 			elseif d[1]<0 or d[2]<0 or d[3]<0 then
 
-				local out={}
+				local out={nil,nil,nil,nil}
 
 				local v=element
 				local hasuv=element.data.uv
