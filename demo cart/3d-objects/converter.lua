@@ -187,6 +187,7 @@ GridObject={
   rotation={0,0,0},
   scale=1,
   hidesmall=false,
+  size=false,
 }
 
 function ExportString(exportdump)
@@ -216,8 +217,12 @@ function ExportString(exportdump)
 	return es
 end
 
-Camera={position={x=0,y=0,z=0},rotation={x=30,y=45,z=0},originoffset={x=0,y=0,z=-10},
-FOV=120,CPlane=Renderer.CuttingPlanes.NearOnly}
+Rscene.camera={
+position={x=0,y=0,z=0},
+rotation={x=30,y=45,z=0},
+originoffset={x=0,y=0,z=-10},
+FOV=120,
+CPlane=Renderer.CuttingPlanes.NearOnly}
 
 T=0
 
@@ -228,6 +233,8 @@ Loadobj()
 Export=false
 
 Menu={s=1,x=1,view=true,c=0}
+
+Renderer.defaultSettings.clipObjects=false
 
 function TIC()
 
@@ -256,7 +263,8 @@ function TIC()
 
 	if Export then
 
-		local exportdump=Renderer.customScene()
+		local exportdump={}
+		Renderer.customScene(exportdump,Rscene.camera)
 
 		Objects[1].lock_to_camera=true
 
@@ -270,26 +278,26 @@ function TIC()
 
 	Export=false; end
 
-
+local camera=Rscene.camera
 
 	local mx,my,mclick,_,_,_,scry=mouse()
 	if mclick then
-		Camera.rotation.y=Camera.rotation.y-((Oldmx or mx)-mx)
-		Camera.rotation.x=Camera.rotation.x-((Oldmy or my)-my)
+		camera.rotation.y=camera.rotation.y-((Oldmx or mx)-mx)
+		camera.rotation.x=camera.rotation.x-((Oldmy or my)-my)
 	end
 	Oldmx,Oldmy=mx,my
-	Camera.originoffset.z=math.min(0,Camera.originoffset.z+(scry*(0.05+(-Camera.originoffset.z/10))) )
+	camera.originoffset.z=math.min(0,camera.originoffset.z+(scry*(0.05+(-camera.originoffset.z/10))) )
 
-	GridObject.hidesmall=Camera.originoffset.z<-40
+	GridObject.hidesmall=camera.originoffset.z<-40
 
 	if Menu.view then
 
-		if btn(0) then Camera.rotation.x=Camera.rotation.x-1 end
-		if btn(1) then Camera.rotation.x=Camera.rotation.x+1 end
-		if btn(2) then Camera.rotation.y=Camera.rotation.y-1 end
-		if btn(3) then Camera.rotation.y=Camera.rotation.y+1 end
-		if btn(4) then Camera.originoffset.z=Camera.originoffset.z+.1 end
-		if btn(5) then Camera.originoffset.z=Camera.originoffset.z-.1 end
+		if btn(0) then camera.rotation.x=camera.rotation.x-1 end
+		if btn(1) then camera.rotation.x=camera.rotation.x+1 end
+		if btn(2) then camera.rotation.y=camera.rotation.y-1 end
+		if btn(3) then camera.rotation.y=camera.rotation.y+1 end
+		if btn(4) then camera.originoffset.z=camera.originoffset.z+.1 end
+		if btn(5) then camera.originoffset.z=camera.originoffset.z-.1 end
 
 	else
 
@@ -374,7 +382,8 @@ end
 
 function PureExport()
 
-	local exportdump=Renderer.InitCustomScene()
+	local exportdump={}
+	Renderer.customScene(exportdump,Rscene.camera)
 
 	Objects[1].lock_to_camera=true
 
