@@ -84,24 +84,24 @@ Rscene=Renderer.data.scene
 
 -- Resets the default scene and setups some other variables for the Renderer, if need be.
 -- Should be reset at least 1 time during program execution befofe doing anything else!
-function Renderer.resetScene()
-	local camera=Rscene.camera --camera data is used to recalculate CPlanes only
+function Renderer.resetScene(customscene,newcamera)
+
+	local scene=customscene or Renderer.data.scene
+	local camera=newcamera or scene.camera
+
 
 	-- we clear our working tables and out vertex count
-	Renderer.data.scene.vertexdump={ clippedverts={} }
-	Renderer.data.scene.drawdump={}
-	Renderer.data.scene.objectorigins=nil
+	scene.vertexdump={clippedverts={}}
+	scene.drawdump={}
+	scene.objectorigins=nil
+	scene.camera=camera
+
 	Renderer.debug.vertexcount=0
 
 	-- we create our plane and map data if they were not created yet, so you have less work to do
 	if #Renderer.CuttingPlanes==0 then Renderer.recalculateCPlanes(camera) end
 	if #Renderer.data.colorToUVMap==0  then Renderer.buildColorMap(255) end
 
-end
-
--- Returns an empty custom scene to work with.
-function Renderer.customScene()
-	return {vertexdump={clippedverts={}},drawdump={}}
 end
 
 -- Builds a color map based on a special sprite where each color corresponds to
@@ -160,3 +160,5 @@ require "clip_scene"
 require "project_verts"
 require "draw_scene"
 require "full_draw"
+
+return Renderer

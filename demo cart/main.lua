@@ -177,8 +177,8 @@ Zoffset=0
 	TotalTime=time()
 
 	Renderer.resetScene()
-	Gui_Scene=Renderer.customScene()
-	Gui_Scene.camera=Rscene.camera
+	Gui_Scene={}
+	Renderer.resetScene(Gui_Scene,Rscene.camera)
 
 	Renderer.addObjectsToScene(ObjectList)
 
