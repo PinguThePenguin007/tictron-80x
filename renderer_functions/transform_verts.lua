@@ -7,13 +7,13 @@ function Renderer.transformVerts(customscene)
 
 	local vertcount=0
 
-	local sin,cos=math.sin,math.cos
+	local sin,cos,rad,type=math.sin,math.cos,math.rad,type
 	local rotate=RendererLib.rotatePreCalc
 
 	local CAMrotx,CAMroty,CAMrotz=
-	 math.rad(camera.rotation.x or camera.rotation[1] or 0),
-	 math.rad(camera.rotation.y or camera.rotation[2] or 0),
-	 math.rad(camera.rotation.z or camera.rotation[3] or 0)
+	 rad(camera.rotation.x or camera.rotation[1] or 0),
+	 rad(camera.rotation.y or camera.rotation[2] or 0),
+	 rad(camera.rotation.z or camera.rotation[3] or 0)
 
 	local CAMposx,CAMposy,CAMposz=
 	 camera.position.x or camera.position[1] or 0,
@@ -43,9 +43,9 @@ function Renderer.transformVerts(customscene)
 	local object=list.object
 
 		local OBJrotx,OBJroty,OBJrotz=
-		 math.rad(object.rotation.x or object.rotation[1] or 0),
-		 math.rad(object.rotation.y or object.rotation[2] or 0),
-		 math.rad(object.rotation.z or object.rotation[3] or 0)
+		 rad(object.rotation.x or object.rotation[1] or 0),
+		 rad(object.rotation.y or object.rotation[2] or 0),
+		 rad(object.rotation.z or object.rotation[3] or 0)
 
 
 		local OBJposx,OBJposy,OBJposz=
@@ -83,7 +83,7 @@ function Renderer.transformVerts(customscene)
 		local lock_to_camera=object.lock_to_camera
 		local rev_rot_order=object.rev_rot_order
 
-		for vkey,vertex in pairs(list) do if vkey~="object" then
+		for vkey=1,#list do local vertex=list[vkey]
 			local vertx,verty,vertz=
 			  vertex.x+OBJoffsetx,
 			  vertex.y+OBJoffsety,
@@ -123,10 +123,11 @@ function Renderer.transformVerts(customscene)
 
 			vertex.x,vertex.y,vertex.z=vertx,verty,vertz
 
-		vertcount=vertcount+1
+			vertcount=vertcount+1
 
-		end end
+		end
 	end end
+
 	return vertcount
 
 end
