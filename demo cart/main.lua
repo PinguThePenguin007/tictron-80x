@@ -186,7 +186,9 @@ Zoffset=0
 
 	Renderer.clipObjects()
 
+	local totalvertices=
 	Renderer.transformVerts()
+	+
 	Renderer.transformVerts(Gui_Scene)
 
 	Mark("VertDumpTime")
@@ -235,7 +237,7 @@ Renderer.fullDraw({},Gui_Scene)
 
 
 
-	print("vertexes:"..Renderer.debug.vertexcount.."\ntris:"..#Renderer.data.scene.drawdump
+	print("vertexes:"..totalvertices.."\ntris:"..#Renderer.data.scene.drawdump
 	,1,1,15,false,1,true)
 
 	if Markstr==nil or T%30==1 then
