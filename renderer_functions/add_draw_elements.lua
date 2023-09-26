@@ -13,30 +13,30 @@ function Renderer.addDrawElements(customscene, BackfaceCulling)
 
 		for etype,drawelement in pairs(object.mesh.drawdata) do
 			local IsTrisOnly= type(etype)=="number"
+			local drawdump_len=#drawdump
 
 			if IsTrisOnly or etype=="t" then
 				local tritable
 				if IsTrisOnly then tritable=object.mesh.drawdata
 				else tritable=drawelement end
 
-				for _,triangle in pairs(tritable) do
+				for _,triangle in pairs(tritable) do local triangle_p=triangle.p
+
 					local p1,p2,p3,normal=
-					 vertlist[ triangle.p[1] ],
-					 vertlist[ triangle.p[2] ],
-					 vertlist[ triangle.p[3] ],
+					 vertlist[ triangle_p[1] ],
+					 vertlist[ triangle_p[2] ],
+					 vertlist[ triangle_p[3] ],
 					 (triangle.n or 1)
 
-					if not (p1==nil or p2==nil or p3==nil) then
-
-						if nobackfaceculling or normal==2 or normal==((
-							GetDotRaw(
-								p1.x,p1.y,p1.z,
-								GetNormalRaw(p1.x,p1.y,p1.z,p2.x,p2.y,p2.z,p3.x,p3.y,p3.z)
-							)>0) and 0 or 1)
-						then
-							drawdump[#drawdump+1]={p1,p2,p3; nofverts=3,type="t",
-							 data=triangle,uv=triangle.uv,object=object}
-						end
+					if nobackfaceculling or normal==2 or normal==((
+						GetDotRaw(
+						 p1.x,p1.y,p1.z,
+						 GetNormalRaw(p1.x,p1.y,p1.z,p2.x,p2.y,p2.z,p3.x,p3.y,p3.z)
+						)>0) and 0 or 1)
+					then
+						drawdump[drawdump_len+1]={p1,p2,p3; nofverts=3,type="t",
+						 data=triangle,uv=triangle.uv,object=object}
+						drawdump_len=drawdump_len+1
 					end
 
 				end
@@ -45,22 +45,22 @@ function Renderer.addDrawElements(customscene, BackfaceCulling)
 
 			elseif etype=="l" then
 
-				for _,line in pairs(drawelement) do
-					local p1,p2=vertlist[line.p[1]],vertlist[line.p[2]]
-					if not (p1==nil or p2==nil) then
-						drawdump[#drawdump+1]={p1,p2; nofverts=2,type="l",
+				for _,line in pairs(drawelement) do local line_p=line.p
+
+						drawdump[drawdump_len+1]={vertlist[line_p[1]],vertlist[line_p[2]]; nofverts=2,type="l",
 						 data=line,object=object}
-					end
+						drawdump_len=drawdump_len+1
+
 				end
 
 			else
 
 				for _,dot in pairs(drawelement) do
-					local p1=vertlist[dot.p]
-					if p1~=nil then
-						drawdump[#drawdump+1]={p1; nofverts=1,type=etype,
+
+						drawdump[drawdump_len+1]={vertlist[dot.p]; nofverts=1,type=etype,
 						 data=dot,object=object}
-					end
+						drawdump_len=drawdump_len+1
+
 				end
 
 			end
