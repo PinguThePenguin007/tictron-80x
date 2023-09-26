@@ -115,8 +115,7 @@ function Renderer.buildColorMap(sprite)
 	Renderer.data.colorToUVMap=colorToUVMap --apply to global table
 end
 
-function Renderer.recalculateCPlanes(customcam)
-	local camera=customcam or Camera or {}
+function Renderer.recalculateCPlanes(camera)
 
 	local camFOV=camera.FOV or 120
 
