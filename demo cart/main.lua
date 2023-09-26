@@ -188,8 +188,6 @@ Zoffset=0
 
 	Renderer.transformVerts()
 	Renderer.transformVerts(Gui_Scene)
-	Renderer.projectVerts()
-	Renderer.projectVerts(Gui_Scene)
 
 	Mark("VertDumpTime")
 
