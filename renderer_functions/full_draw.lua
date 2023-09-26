@@ -13,7 +13,7 @@ function Renderer.fullDraw(objects,customscene,settings,centerx,centery)
 		Renderer.clipObjects(customscene)
 	end
 
-	Renderer.transformVerts(customscene, settings.CountVerts)
+	local verts=Renderer.transformVerts(customscene)
 	Renderer.projectVerts(customscene,centerx,centery)
 	Renderer.addDrawElements(customscene, settings.BackfaceCulling)
 	if settings.EnableLabels then
@@ -27,4 +27,5 @@ function Renderer.fullDraw(objects,customscene,settings,centerx,centery)
 
 	Renderer.drawScene(customscene,true,centerx,centery, settings.UseTTriOnly, settings.Wireframe)
 
+	return verts
 end
