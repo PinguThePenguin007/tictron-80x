@@ -34,9 +34,7 @@ data={
 scene={
 
 -- contains vertices for transformation and other uses
-vertexdump={
-clippedverts={}, --contains vertices resulted from clipping the scene
-},
+vertexdump={},
 
 -- contains draw elements (triangles, lines, etc.) for drawing, sorting, etc.
 drawdump={},
@@ -88,8 +86,8 @@ function Renderer.resetScene(customscene,newcamera)
 
 
 	-- we clear our working tables and out vertex count
-	scene.vertexdump={clippedverts={}}
-	scene.drawdump={}
+	scene.vertexdump={}
+	scene.drawdump=  {}
 	scene.objectorigins=nil
 	scene.camera=camera
 

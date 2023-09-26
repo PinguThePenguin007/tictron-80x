@@ -39,7 +39,7 @@ function Renderer.transformVerts(customscene)
 
 
 
-	for lkey,list in pairs(vertexdump) do if lkey~="clippedverts" then
+	for lkey,list in pairs(vertexdump) do
 	local object=list.object
 
 		local OBJrotx,OBJroty,OBJrotz=
@@ -126,7 +126,7 @@ function Renderer.transformVerts(customscene)
 			vertcount=vertcount+1
 
 		end
-	end end
+	end
 
 	return vertcount
 

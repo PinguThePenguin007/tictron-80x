@@ -6,11 +6,13 @@ function Renderer.clipScene(customscene, customplanes)
 
 	local cplanes=customplanes or scene.camera.CPlane
 
+	if vertexdump.clippedverts==nil then vertexdump.clippedverts={} end
 	local clippedverts=vertexdump.clippedverts
 
-	local GetDotRaw,uv3dlerp,table_remove,table_insert=RendererLib.GetDotRaw,RendererLib.UV3DLerp,table.remove,table.insert
+	local GetDotRaw,uv3dlerp,table_remove=RendererLib.GetDotRaw,RendererLib.UV3DLerp,table.remove
 
-	local d={true,true,true} --we can reuse a single table for multiple clipping operations
+	local d=  {nil,nil,nil} --we can reuse tables for multiple clipping operations
+	local out={{nil,nil,nil},{nil,nil,nil},{nil,nil,nil},{nil,nil,nil}}
 
 	for _,cPlane in pairs(cplanes) do
 		local cPlanePOSx,cPlanePOSy,cPlanePOSz,cPlaneNORMx,cPlaneNORMy,cPlaneNORMz=
@@ -63,34 +65,49 @@ function Renderer.clipScene(customscene, customplanes)
 				table_remove(drawdump,eid)
 			elseif d[1]<0 or d[2]<0 or d[3]<0 then
 
-				local out={nil,nil,nil,nil}
+
+				local out_len=0 -- we overwrite the values in the out table instead of creating the table every time
+
 
 				local v=element
 				local hasuv=element.data.uv
 
 				local uv
-				if hasuv then uv=element.uv else uv={} end
+				if hasuv then uv=element.uv end
+
+				local outI
 
 				for i=1,3 do
 					local nexti,i_uvindex= i%3+1, i*2
 					if d[i]>=0 and d[nexti]>=0 then
 
-						out[#out+1]={p=v[i],
-						 uv_U=hasuv and uv[i_uvindex-1],
-						 uv_V=hasuv and uv[i_uvindex]}
+						outI=out[out_len+1]
+						 outI.p=v[i]
+						 outI.uv_U=hasuv and uv[i_uvindex-1]
+						 outI.uv_V=hasuv and uv[i_uvindex]
+						out_len=out_len+1
 
 					end
 					if d[i]>=0 and d[nexti]<0 then
 
-						out[#out+1]={p=v[i],
-						 uv_U=hasuv and uv[i_uvindex-1],
-						 uv_V=hasuv and uv[i_uvindex]}
+						outI=out[out_len+1]
+						 outI.p=v[i]
+						 outI.uv_U=hasuv and uv[i_uvindex-1]
+						 outI.uv_V=hasuv and uv[i_uvindex]
+						out_len=out_len+1
 
 						local p,uv_u,uv_v=uv3dlerp(v[i],v[nexti],
-						 uv[i_uvindex-1],uv[i_uvindex],
-						 uv[nexti*2-1],uv[nexti*2],
+						 hasuv and uv[i_uvindex-1],
+						 hasuv and uv[i_uvindex],
+						 hasuv and uv[nexti*2-1],
+						 hasuv and uv[nexti*2],
 						d[i]/(d[i]-d[nexti]),hasuv,vert_POSz)
-						out[#out+1]={p=p,uv_U=uv_u,uv_V=uv_v}
+
+						outI=out[out_len+1]
+						 outI.p=p
+						 outI.uv_U=uv_u
+						 outI.uv_V=uv_v
+						out_len=out_len+1
 
 						clippedverts[#clippedverts+1]=p
 
@@ -98,11 +115,17 @@ function Renderer.clipScene(customscene, customplanes)
 					if d[i]<0 and d[nexti]>=0 then
 
 						local p,uv_u,uv_v=uv3dlerp(v[i],v[nexti],
-						 uv[i_uvindex-1],uv[i_uvindex],
-						 uv[nexti*2-1],uv[nexti*2],
+						 hasuv and uv[i_uvindex-1],
+						 hasuv and uv[i_uvindex],
+						 hasuv and uv[nexti*2-1],
+						 hasuv and uv[nexti*2],
 						d[i]/(d[i]-d[nexti]),hasuv,vert_POSz)
 
-						out[#out+1]={p=p,uv_U=uv_u,uv_V=uv_v}
+						outI=out[out_len+1]
+						 outI.p=p
+						 outI.uv_U=uv_u
+						 outI.uv_V=uv_v
+						out_len=out_len+1
 
 						clippedverts[#clippedverts+1]=p
 
@@ -117,13 +140,13 @@ function Renderer.clipScene(customscene, customplanes)
 				 element.uv={
 				  out[1].uv_U,out[1].uv_V,out[2].uv_U,
 				  out[2].uv_V,out[3].uv_U,out[3].uv_V} end
-				if #out==4 then
+				if out_len==4 then
 					local uvlist
 					if hasuv then uvlist={
 					 out[1].uv_U,out[1].uv_V,out[3].uv_U,
 					 out[3].uv_V,out[4].uv_U,out[4].uv_V}
 					end
-				 table_insert(drawdump,{out[1].p,out[3].p,out[4].p;  type="t",nofverts=3,data=element.data,uv=uvlist,object=element.object})
+					drawdump[#drawdump+1]={out[1].p,out[3].p,out[4].p;  type="t",nofverts=3,data=element.data,uv=uvlist,object=element.object}
 				end
 			end
 
