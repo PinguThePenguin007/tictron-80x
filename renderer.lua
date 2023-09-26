@@ -26,7 +26,6 @@ EnableLabels=true,
 ClipObjects=true,
 Sort=true,
 
-CountVerts=true,
 },
 
 -- the Renderer's data, which is (usually) used during processing.
@@ -63,8 +62,6 @@ colorToUVMap={},
 -- Debug variables.
 debug={
 
-vertexcount=0 --does what it says on the tin
-
 },
 
 -- The default cutting planes for clipping the scene.
@@ -95,8 +92,6 @@ function Renderer.resetScene(customscene,newcamera)
 	scene.drawdump={}
 	scene.objectorigins=nil
 	scene.camera=camera
-
-	Renderer.debug.vertexcount=0
 
 	-- we create our plane and map data if they were not created yet, so you have less work to do
 	if #Renderer.CuttingPlanes==0 then Renderer.recalculateCPlanes(camera) end

@@ -1,12 +1,11 @@
-function Renderer.transformVerts(customscene, CountVerts)
+function Renderer.transformVerts(customscene)
 
 	local scene=customscene or Renderer.data.scene
 	local vertexdump=scene.vertexdump
 
 	local camera=scene.camera
 
-	local vertcount=Renderer.debug.vertexcount
-	if CountVerts==nil then CountVerts=Renderer.defaultSettings.CountVerts end
+	local vertcount=0
 
 	local sin,cos=math.sin,math.cos
 	local rotate=RendererLib.rotatePreCalc
@@ -124,10 +123,10 @@ function Renderer.transformVerts(customscene, CountVerts)
 
 			vertex.x,vertex.y,vertex.z=vertx,verty,vertz
 
-		if CountVerts then vertcount=vertcount+1 end
+		vertcount=vertcount+1
 
 		end end
 	end end
-	Renderer.debug.vertexcount=vertcount
+	return vertcount
 
 end
