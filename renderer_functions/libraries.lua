@@ -95,6 +95,16 @@ GetDotRaw=function (ax,ay,az,bx,by,bz)
 	return ax*bx+ay*by+az*bz
 end,
 
+-- Get the normal of a triangle using its 3 vertices
+GetNormalRaw=function (ax,ay,az,bx,by,bz,cx,cy,cz)
+	local va_x,va_y,va_z=ax-bx,ay-by,az-bz
+	local vb_x,vb_y,vb_z=cx-bx,cy-by,cz-bz
+	return
+	 va_y*vb_z-va_z*vb_y,
+	 va_z*vb_x-va_x*vb_z,
+	 va_x*vb_y-va_y*vb_x
+end,
+
 NormalizeRaw=function(vx,vy,vz)
 	local lenV=math.sqrt(vx*vx+vy*vy+vz*vz)
 	return vx/lenV,vy/lenV,vz/lenV

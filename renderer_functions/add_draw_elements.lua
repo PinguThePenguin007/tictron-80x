@@ -7,6 +7,8 @@ function Renderer.addDrawElements(customscene, BackfaceCulling)
 	if BackfaceCulling==nil then BackfaceCulling=Renderer.defaultSettings.BackfaceCulling end
 	local nobackfaceculling=not BackfaceCulling
 
+	local GetDotRaw,GetNormalRaw=RendererLib.GetDotRaw,RendererLib.GetNormalRaw
+
 	for key,vertlist in pairs(vertexdump) do if key~="clippedverts" then local object=vertlist.object
 
 		for etype,drawelement in pairs(object.mesh.drawdata) do
@@ -26,12 +28,11 @@ function Renderer.addDrawElements(customscene, BackfaceCulling)
 
 					if not (p1==nil or p2==nil or p3==nil) then
 
-						local p1_drawx,p1_drawy=p1.drawx,p1.drawy
-
-						if nobackfaceculling or normal==2 or
-							((normal==((p2.drawx-p1_drawx)*(p3.drawy-p1_drawy)-
-							           (p3.drawx-p1_drawx)*(p2.drawy-p1_drawy)>0 and 1 or 0))
-							~= (p1.z>0) ~= (p2.z>0) ~= (p3.z>0))
+						if nobackfaceculling or normal==2 or normal==((
+							GetDotRaw(
+								p1.x,p1.y,p1.z,
+								GetNormalRaw(p1.x,p1.y,p1.z,p2.x,p2.y,p2.z,p3.x,p3.y,p3.z)
+							)>0) and 0 or 1)
 						then
 							drawdump[#drawdump+1]={p1,p2,p3; nofverts=3,type="t",
 							 data=triangle,uv=triangle.uv,object=object}
