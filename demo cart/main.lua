@@ -220,9 +220,37 @@ Zoffset=0
 	Renderer.sortScene(Gui_Scene)
 	Mark("TriSortTime")
 
-	cls(11)
 
+	-- huge thanks to Mypka_Max and soxfox42 for finding out this trick
+
+	vbank(1);cls()
+
+	--draw the scene to be dithered
+	Renderer.buildColorMap(254)
 	Renderer.drawScene()
+
+	--overlay with lines to create a checker pattern
+	for i=1,188 do line(i*2-136,0,i*2,136, 0) end
+
+
+	vbank(0)
+
+	cls(11)
+--draw the scene
+	Renderer.buildColorMap(255)
+	Renderer.drawScene()
+
+	--copy vbank(1) to vbank(0), overlaying our scene
+	ttri(0,0,240,0,0,136,0,0,240,0,0,136,2,0)
+	ttri(240,0,240,136,0,136,240,0,240,136,0,136,2,0)
+
+	--clear vbank(1) for possible use later
+	vbank(1);cls()
+
+	vbank(0)
+
+	--continue drawing
+
 	Renderer.drawScene(Gui_Scene)
 
 	Mark("TriDrawTime")
@@ -389,6 +417,7 @@ end
 -- 065:aaa00000aaa00000aaa00000aaa0000000000000000000000000000000000000
 -- 080:6565656556565656656565655656565665656565565656566565656556565656
 -- 096:eeeeee00eeeeee00eeddee00eeeeee00eeeeee00eeeeeee0e22e22e0eeeeeee0
+-- 254:1122334411223344556677885566778899aabbcc99aabbccddeeff00ddeeff00
 -- 255:001122330011223344556677445566778899aabb8899aabbccddeeffccddeeff
 -- </TILES>
 
