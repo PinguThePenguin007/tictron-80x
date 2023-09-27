@@ -221,7 +221,7 @@ Zoffset=0
 	Mark("TriSortTime")
 
 
-	-- huge thanks to Mypka_Max and soxfox42 for finding out this trick
+	-- huge thanks to Mypka_Max and soxfox42 for finding this trick
 
 	vbank(1);cls()
 
