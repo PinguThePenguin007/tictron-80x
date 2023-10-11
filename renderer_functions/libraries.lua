@@ -111,7 +111,7 @@ NormalizeRaw=function(vx,vy,vz)
 end,
 
 -- Linear interpolation of a 3D vector, modified to work specifically with ClipScene().
-UV3DLerp=function (a_vec,b_vec,a_uv_U,a_uv_V,b_uv_U,b_uv_V,n,hasuv,plane_POSz)
+UV3DLerp=function (a_vec,b_vec,n,plane_POSz,hasuv,a_uv_U,a_uv_V,b_uv_U,b_uv_V)
 	return
 	 {x=              a_vec.x+(b_vec.x-a_vec.x)*n,
 	  y=              a_vec.y+(b_vec.y-a_vec.y)*n,

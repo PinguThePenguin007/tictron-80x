@@ -96,12 +96,12 @@ function Renderer.clipScene(customscene, customplanes)
 						 outI.uv_V=hasuv and uv[i_uvindex]
 						out_len=out_len+1
 
-						local p,uv_u,uv_v=uv3dlerp(v[i],v[nexti],
+						local p,uv_u,uv_v=uv3dlerp(v[i],v[nexti],d[i]/(d[i]-d[nexti]),vert_POSz,
+						 hasuv,
 						 hasuv and uv[i_uvindex-1],
 						 hasuv and uv[i_uvindex],
 						 hasuv and uv[nexti*2-1],
-						 hasuv and uv[nexti*2],
-						d[i]/(d[i]-d[nexti]),hasuv,vert_POSz)
+						 hasuv and uv[nexti*2])
 
 						outI=out[out_len+1]
 						 outI.p=p
@@ -114,12 +114,12 @@ function Renderer.clipScene(customscene, customplanes)
 					end
 					if d[i]<0 and d[nexti]>=0 then
 
-						local p,uv_u,uv_v=uv3dlerp(v[i],v[nexti],
+						local p,uv_u,uv_v=uv3dlerp(v[i],v[nexti], d[i]/(d[i]-d[nexti]),vert_POSz,
+						 hasuv,
 						 hasuv and uv[i_uvindex-1],
 						 hasuv and uv[i_uvindex],
 						 hasuv and uv[nexti*2-1],
-						 hasuv and uv[nexti*2],
-						d[i]/(d[i]-d[nexti]),hasuv,vert_POSz)
+						 hasuv and uv[nexti*2])
 
 						outI=out[out_len+1]
 						 outI.p=p
@@ -168,11 +168,11 @@ function Renderer.clipScene(customscene, customplanes)
 			elseif d[1]<0 or d[2]<0 then
 
 					if d[1]<0 then
-						P1=uv3dlerp(P1,P2,nil,nil,nil,nil,d[1]/(d[1]-d[2]),nil,vert_POSz)
+						P1=uv3dlerp(P1,P2, d[1]/(d[1]-d[2]),vert_POSz)
 						clippedverts[#clippedverts+1]=P1
 					end
 					if d[2]<0 then
-						P2=uv3dlerp(P2,P1,nil,nil,nil,nil,d[2]/(d[2]-d[1]),nil,vert_POSz)
+						P2=uv3dlerp(P2,P1, d[2]/(d[2]-d[1]),vert_POSz)
 						clippedverts[#clippedverts+1]=P2
 					end
 
