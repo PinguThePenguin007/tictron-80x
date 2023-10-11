@@ -173,33 +173,31 @@ NoClip=false
 function TIC()
 	T=(T and T+1) or 0
 
-Zoffset=0
-
 	Markinit()
 	TotalTime=time()
 
 	Renderer.resetScene()
-	--Gui_Scene={}
-	--Renderer.resetScene(Gui_Scene,Rscene.camera)
+	Gui_Scene={}
+	Renderer.resetScene(Gui_Scene,Rscene.camera)
 
 	Renderer.addObjectsToScene(ObjectList)
 
-	--Renderer.addObjectsToScene(GuiObjects,Gui_Scene)
+	Renderer.addObjectsToScene(GuiObjects,Gui_Scene)
 
 	Renderer.clipObjects()
 
 	local totalvertices=
 	Renderer.transformVerts()
-	--+
-	--Renderer.transformVerts(Gui_Scene)
+	+
+	Renderer.transformVerts(Gui_Scene)
 
 	Mark("VertDumpTime")
 
 	Renderer.addDrawElements()
-	--Renderer.addDrawElements(Gui_Scene)
+	Renderer.addDrawElements(Gui_Scene)
 
 	Renderer.replaceLabels()
-	--Renderer.replaceLabels(Gui_Scene)
+	Renderer.replaceLabels(Gui_Scene)
 	Mark("TriDumpTime")
 
 -- uncomment to enable display of object origins and their "sizes"
@@ -215,19 +213,20 @@ Zoffset=0
 --]]
 
 	Renderer.simpleClipScene()
+	Renderer.simpleClipScene(Gui_Scene)
 
 	--Renderer.clipScene()
 	--Renderer.clipScene(Gui_Scene)
 	Mark("TriClipTime")
 
 	Renderer.sortScene()
-	--Renderer.sortScene(Gui_Scene)
+	Renderer.sortScene(Gui_Scene)
 	Mark("TriSortTime")
 
 	cls(11)
 
 	Renderer.drawScene()
-	--Renderer.drawScene(Gui_Scene)
+	Renderer.drawScene(Gui_Scene)
 
 	Mark("TriDrawTime")
 
